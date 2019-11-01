@@ -1,0 +1,23 @@
+select 
+(
+select stopid, mode, to_char as weekday, date_part as hour, count(distinct vehicleid) as no_of_vehicles, count(onoff) filter (where onoff = 'on') as no_of_touchon, count(onoff) filter (where onoff = 'off') as no_of_touchoff group by(stopid, mode, to_char(TO_TIMESTAMP(datetime, 'YYYY-MM-DD HH24:MI:SS'), 'day'), date_part('hour', TO_TIMESTAMP(datetime, 'YYYY-MM-DD HH24:MI:SS'))) 
+)
+from temptable where date_part('year', TO_TIMESTAMP(datetime, 'YYYY-MM-DD HH24:MI:SS')) = 2017
+
+
+select stopid, mode, to_char(TO_TIMESTAMP(datetime, 'YYYY-MM-DD HH24:MI:SS'), 'day') as weekday, date_part('hour', TO_TIMESTAMP(datetime, 'YYYY-MM-DD HH24:MI:SS')) as hour, count(distinct vehicleid) as no_of_vehicles, count(onoff) filter (where onoff = 'on') as no_of_touchon, count(onoff) filter (where onoff = 'off') as no_of_touchoff from temptable where date_part('year', TO_TIMESTAMP(datetime, 'YYYY-MM-DD HH24:MI:SS')) = 2017 group by(stopid, mode, to_char(TO_TIMESTAMP(datetime, 'YYYY-MM-DD HH24:MI:SS'), 'day'), date_part('hour', TO_TIMESTAMP(datetime, 'YYYY-MM-DD HH24:MI:SS'))) 
+
+select stopid, mode, to_char(TO_TIMESTAMP(datetime, 'YYYY-MM-DD HH24:MI:SS'), 'day') as weekday, date_part('hour', TO_TIMESTAMP(datetime, 'YYYY-MM-DD HH24:MI:SS')) as hour,
+count(distinct vehicleid) as no_of_vehicles, count(onoff) filter (where onoff = 'on') as no_of_touchon,
+count(onoff) filter (where onoff = 'off') as no_of_touchoff into transport_summary from event 
+where date_part('year', TO_TIMESTAMP(datetime, 'YYYY-MM-DD HH24:MI:SS')) = 2017 group by(stopid, mode, to_char(TO_TIMESTAMP(datetime, 'YYYY-MM-DD HH24:MI:SS'), 'day'), 
+																						 date_part('hour', TO_TIMESTAMP(datetime, 'YYYY-MM-DD HH24:MI:SS'))) 
+																						 
+																						 
+																						 
+select stopid, mode, extract(week from TO_TIMESTAMP(datetime, 'YYYY-MM-DD HH24:MI:SS')) as week_no, to_char(TO_TIMESTAMP(datetime, 'YYYY-MM-DD HH24:MI:SS'), 'day') as weekday, date_part('hour', TO_TIMESTAMP(datetime, 'YYYY-MM-DD HH24:MI:SS')) as hour,
+count(distinct vehicleid) as no_of_vehicles, count(onoff) filter (where onoff = 'on') as no_of_touchon,
+count(onoff) filter (where onoff = 'off') as no_of_touchoff from temptable 
+where date_part('year', TO_TIMESTAMP(datetime, 'YYYY-MM-DD HH24:MI:SS')) = 2016 group by(stopid, mode, to_char(TO_TIMESTAMP(datetime, 'YYYY-MM-DD HH24:MI:SS'), 'day'), 
+																						 date_part('hour', TO_TIMESTAMP(datetime, 'YYYY-MM-DD HH24:MI:SS')),
+																						 extract(week from TO_TIMESTAMP(datetime, 'YYYY-MM-DD HH24:MI:SS'))) 
